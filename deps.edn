@@ -1,0 +1,10 @@
+{:paths   ["resources" "src"]
+ :deps    {datascript/datascript     {:mvn/version "1.6.1"}
+           org.clojure/clojure       {:mvn/version "1.11.1"}
+           org.clojure/clojurescript {:mvn/version "1.11.60"}
+           org.clojure/core.async    {:mvn/version "1.6.673"}
+           reagent/reagent           {:mvn/version "1.2.0"}
+           skuttleman/defacto-forms+ {:git/url   "https://github.com/skuttleman/defacto"
+                                      :git/sha   "0739cd80cf1f1ba8d69a6417509301afd6e6751d"
+                                      :deps/root "forms+"}}
+ :aliases {:shadow {:extra-deps {thheller/shadow-cljs {:mvn/version "2.26.2"}}}}}

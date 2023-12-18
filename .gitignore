@@ -1,0 +1,10 @@
+.cpcache/
+.idea/
+.shadow-cljs/
+classes/
+node_modules/
+resources/public/js/
+target/
+*.iml
+*.log
+.nrepl-port
