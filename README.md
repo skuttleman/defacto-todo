@@ -27,5 +27,5 @@ and how ["DS" your "L"](https://en.wikipedia.org/wiki/Domain-specific_language) 
 ```bash
 $ git clone https://github.com/skuttleman/defacto-todo.git
 $ npm i
-$ clj -A:shadow -J-XX:-OmitStackTraceInFastThrow -m shadow.cljs.devtools.cli watch dev | grep --color=never -v DEBUG
+$ clj -A:shadow -J-XX:-OmitStackTraceInFastThrow -m shadow.cljs.devtools.cli watch dev
 ```
