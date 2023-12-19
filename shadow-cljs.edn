@@ -7,10 +7,5 @@
                   :compiler-options {:warnings {:redef false}
                                      :externs  ["datascript/externs.js"]}
                   :devtools         {:watch-dir  "resources/public"
-                                     :after-load defacto-todo.app/init!}
-                  :modules          {:main {:init-fn defacto-todo.app/init!}}}
-            :ui  {:target           :browser
-                  :output-dir       "resources/public/js"
-                  :compiler         {:optimizations :advanced}
-                  :compiler-options {:externs ["datascript/externs.js"]}
+                                     :after-load defacto-todo.app/load!}
                   :modules          {:main {:init-fn defacto-todo.app/init!}}}}}

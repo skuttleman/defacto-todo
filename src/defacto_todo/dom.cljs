@@ -1,4 +1,5 @@
-(ns defacto-todo.dom)
+(ns defacto-todo.dom
+  "Some js ugliness")
 
 (defn target-value [e]
   (some-> e .-target .-value))

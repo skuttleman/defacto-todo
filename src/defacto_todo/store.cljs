@@ -7,54 +7,60 @@
     [defacto.forms.plus :as forms+]
     [defacto.resources.core :as res]))
 
+(def ^:dynamic *store*)
+
 (def ^:private ^:const page-form [::forms+/valid [::todo#create]])
 
 (defn load-page!
   "Loads page data on initial render"
-  [store]
-  (defacto/emit! store [::forms/created page-form {:todos/priority :medium}])
-  (defacto/dispatch! store [::res/submit! [::todo#fetch]]))
+  []
+  (defacto/emit! *store* [::forms/created page-form {:todos/priority :medium}])
+  (defacto/dispatch! *store* [::res/submit! [::todo#fetch]]))
 
-(defn subs
+(defn page-subscriptions
   "The subscriptions relevant to the todos page"
-  [store]
-  {:sub:todos   (defacto/subscribe store [::?:todos])
-   :sub:todones (defacto/subscribe store [::?:todones])})
+  []
+  {:sub:todos   (defacto/subscribe *store* [::?:todos])
+   :sub:todones (defacto/subscribe *store* [::?:todones])})
 
-(defn ?:form+
+(defn form-data
   "The page's form"
-  [store]
-  (defacto/subscribe store [::forms+/?:form+ page-form]))
+  []
+  (forms/data @(defacto/subscribe *store* [::forms+/?:form+ page-form])))
+
+(defn form-errors
+  "The page's form"
+  []
+  (let [res @(defacto/subscribe *store* [::forms+/?:form+ page-form])]
+    (when (res/error? res)
+      (res/payload res))))
+
+(defn ->on-change
+  "Makes an \"on-change\" handler which updates a path in the form"
+  [path]
+  (fn [value]
+    (defacto/dispatch! *store* [::forms/changed page-form path value])))
 
 (defn todid!
   "Marks a \"todo\" as done"
-  [store todo-id]
-  (defacto/dispatch! store [::res/submit! [::todo#delete todo-id]]))
-
-(defn form-cleanup!
-  "cleans up form in db"
-  [store]
-  (defacto/emit! store [::forms+/destroyed page-form]))
+  [todo-id]
+  (defacto/dispatch! *store* [::res/submit! [::todo#delete todo-id]]))
 
 (defn submit!
   "submission input handler (i.e. on-click) for submitting the form"
-  [store]
-  (fn [_]
-    (defacto/dispatch! store [::forms+/submit! page-form])))
+  [_]
+  (defacto/dispatch! *store* [::forms+/submit! page-form]))
+
+(defn form-cleanup!
+  "cleans up form in db"
+  []
+  (defacto/emit! *store* [::forms+/destroyed page-form]))
 
 (defn errors
   "The page's form errors"
   [form+]
   (when (res/error? form+)
     (::forms/errors (res/payload form+))))
-
-(defn with-form-attrs
-  "Standard form control's attributes"
-  [store form+ path]
-  (let [form-data (forms/data form+)]
-    {:value     (get-in form-data path)
-     :on-change (fn [value]
-                  (defacto/emit! store [::forms/changed page-form path value]))}))
 
 (defn ^:private all-todos [db]
   (res/payload (defacto/query-responder db [::res/?:resource [::todo#fetch]])))
