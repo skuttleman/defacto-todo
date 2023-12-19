@@ -3,7 +3,7 @@
     [datascript.core :as d]))
 
 (defmulti ^{:arglists '([{:keys [api] :as req}])} do-request
-          "Request Handler"
+          "Backend request handler"
           :api)
 
 (defonce ^:private conn
@@ -30,6 +30,6 @@
        (map first)))
 
 (defmethod do-request :DELETE:todos:id [{:keys [todo-id]}]
-  (d/transact! conn [{:todos/id    todo-id
-                      :todos/done? true
+  (d/transact! conn [{:todos/id        todo-id
+                      :todos/done?     true
                       :todos/todone-at (js/Date.)}]))

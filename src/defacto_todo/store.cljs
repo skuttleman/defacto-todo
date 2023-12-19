@@ -1,4 +1,5 @@
 (ns defacto-todo.store
+  "The `defacto` store interactions"
   (:require
     [clojure.string :as string]
     [defacto.core :as defacto]
@@ -6,34 +7,50 @@
     [defacto.forms.plus :as forms+]
     [defacto.resources.core :as res]))
 
-(def ^:private page-form [::forms+/valid [::todo#create]])
+(def ^:private ^:const page-form [::forms+/valid [::todo#create]])
 
-(defn load-page! [store]
+(defn load-page!
+  "Loads page data on initial render"
+  [store]
   (defacto/emit! store [::forms/created page-form {:todos/priority :medium}])
   (defacto/dispatch! store [::res/submit! [::todo#fetch]]))
 
-(defn subs [store]
+(defn subs
+  "The subscriptions relevant to the todos page"
+  [store]
   {:sub:todos   (defacto/subscribe store [::?:todos])
    :sub:todones (defacto/subscribe store [::?:todones])})
 
-(defn ?:form [store]
+(defn ?:form+
+  "The page's form"
+  [store]
   (defacto/subscribe store [::forms+/?:form+ page-form]))
 
-(defn todid! [store todo-id]
+(defn todid!
+  "Marks a \"todo\" as done"
+  [store todo-id]
   (defacto/dispatch! store [::res/submit! [::todo#delete todo-id]]))
 
-(defn form-cleanup! [store]
+(defn form-cleanup!
+  "cleans up form in db"
+  [store]
   (defacto/emit! store [::forms+/destroyed page-form]))
 
-(defn submit! [store]
+(defn submit!
+  "submission input handler (i.e. on-click) for submitting the form"
+  [store]
   (fn [_]
     (defacto/dispatch! store [::forms+/submit! page-form])))
 
-(defn errors [form+]
+(defn errors
+  "The page's form errors"
+  [form+]
   (when (res/error? form+)
     (::forms/errors (res/payload form+))))
 
-(defn with-form-attrs [store form+ path]
+(defn with-form-attrs
+  "Standard form control's attributes"
+  [store form+ path]
   (let [form-data (forms/data form+)]
     {:value     (get-in form-data path)
      :on-change (fn [value]

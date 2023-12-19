@@ -7,5 +7,6 @@ A basic example of using [defacto](https://github.com/skuttleman/defacto) with `
 
 ## Run It
 ```bash
-$ npm i && clj -A:shadow -J-XX:-OmitStackTraceInFastThrow -m shadow.cljs.devtools.cli watch dev | grep --color=never -v DEBUG
+$ npm i
+$ clj -A:shadow -J-XX:-OmitStackTraceInFastThrow -m shadow.cljs.devtools.cli watch dev | grep --color=never -v DEBUG
 ```

@@ -30,7 +30,7 @@
      [:p.help.is-danger err])])
 
 (defn ^:private todo-form [store]
-  (r/with-let [sub (store/?:form store)]
+  (r/with-let [sub (store/?:form+ store)]
     (let [form+ @sub
           errors (store/errors form+)]
       [:form.form {:on-submit (comp (store/submit! store) dom/prevent-default)}
